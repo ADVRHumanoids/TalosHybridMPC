@@ -47,7 +47,7 @@ costs:
   - &w_base_capture 200.
   - &w_contact_z 250.
   - &w_sole_rot 100.
-  - &w_postural 5.
+  - &w_postural 30.
   - &w_v 1e-2
   - &w_a 2e-1
   - &w_f 6e-3
