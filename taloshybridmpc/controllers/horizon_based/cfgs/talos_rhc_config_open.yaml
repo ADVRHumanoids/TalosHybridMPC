@@ -1,0 +1,144 @@
+solver:
+  type: ilqr
+  ipopt.linear_solver: ma57
+  ipopt.tol: 0.1
+  ipopt.constr_viol_tol: 0.01
+  ilqr.constraint_violation_threshold: 1e-2
+  ipopt.print_level: 5
+  ipopt.suppress_all_output: 'yes'
+  ipopt.sb: 'yes'
+  ilqr.suppress_all_output: 'yes'
+  ilqr.codegen_enabled: true
+  ilqr.codegen_workdir: /tmp/talos_rhc
+  ilqr.enable_gn: true
+  ilqr.hxx_reg_base: 0.0
+  ilqr.n_threads: 0
+  print_time: 0
+
+constraints:
+  - left_sole_link
+  - right_sole_link
+
+costs:
+  - z_left_sole_link
+  - z_right_sole_link
+  - base_lin_velxy
+  - base_lin_velz
+  - base_omega
+  - base_capture
+  - joint_posture_capture
+  - v_regularization
+  - a_regularization
+
+.define:
+  - &w_base_omega 15.
+  - &w_base_vxy 12.
+  - &w_base_vz 20.
+  - &w_base_capture 200.
+  - &w_contact_z 250.
+  - &w_postural 5.
+  - &w_v 1e-2
+  - &w_a 2e-1
+
+base_lin_velxy:
+  type: Cartesian
+  distal_link: base_link
+  indices: [0, 1]
+  nodes: ${range(1, N-5)}
+  cartesian_type: velocity
+  weight: *w_base_vxy
+
+base_lin_velz:
+  type: Cartesian
+  distal_link: base_link
+  indices: [2]
+  nodes: ${range(1, N-5)}
+  cartesian_type: velocity
+  weight: *w_base_vz
+
+base_omega:
+  type: Cartesian
+  distal_link: base_link
+  indices: [3, 4, 5]
+  nodes: ${range(1, N-5)}
+  cartesian_type: velocity
+  weight: *w_base_omega
+
+base_capture:
+  type: Cartesian
+  distal_link: base_link
+  indices: [0, 1, 2, 3, 4, 5]
+  nodes: ${range(N-5, N+1)}
+  cartesian_type: velocity
+  weight: *w_base_capture
+
+zero_velocity_left_sole_link:
+  type: Cartesian
+  base_link: "world"
+  distal_link: left_sole_link
+  indices: [0, 1, 2]
+  cartesian_type: velocity
+
+zero_velocity_right_sole_link:
+  type: Cartesian
+  base_link: "world"
+  distal_link: right_sole_link
+  indices: [0, 1, 2]
+  cartesian_type: velocity
+
+interaction_left_sole_link:
+  type: VertexForce
+  frame: left_sole_link
+  fn_min: 50.0
+  enable_fc: true
+  friction_coeff: 0.5
+  vertex_frames:
+    - left_sole_link
+
+interaction_right_sole_link:
+  type: VertexForce
+  frame: right_sole_link
+  fn_min: 50.0
+  enable_fc: true
+  friction_coeff: 0.5
+  vertex_frames:
+    - right_sole_link
+
+left_sole_link:
+  type: Contact
+  subtask: [interaction_left_sole_link, zero_velocity_left_sole_link]
+
+right_sole_link:
+  type: Contact
+  subtask: [interaction_right_sole_link, zero_velocity_right_sole_link]
+
+joint_posture_capture:
+  type: Postural
+  weight: *w_postural
+  nodes: ${range(N-5, N+1)}
+
+v_regularization:
+  type: Regularization
+  variable_name: v
+  nodes: ${range(0, N+1)}
+  weight: *w_v
+
+a_regularization:
+  type: Regularization
+  variable_name: a
+  nodes: ${range(0, N+1)}
+  weight: *w_a
+
+z_left_sole_link:
+  type: Cartesian
+  distal_link: left_sole_link
+  indices: [2]
+  cartesian_type: position
+  weight: *w_contact_z
+
+z_right_sole_link:
+  type: Cartesian
+  distal_link: right_sole_link
+  indices: [2]
+  cartesian_type: position
+  weight: *w_contact_z

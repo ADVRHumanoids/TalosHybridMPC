@@ -1,0 +1,3 @@
+XBotInterface:
+  urdf_path: $PWD/talos.urdf
+  srdf_path: $PWD/talos.srdf
