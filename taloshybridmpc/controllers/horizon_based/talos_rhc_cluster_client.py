@@ -43,7 +43,9 @@ class TalosRHCLusterClient(HybridQuadrupedClusterClient):
             custom_opts=custom_opts)
 
     def _xrdf_cmds(self):
-        return get_xrdf_cmds_horizon()
+        parts = self._urdf_xacro_path.split('/')
+        urdf_descr_root_path = '/'.join(parts[:-2])
+        return get_xrdf_cmds_horizon(urdf_descr_root_path=urdf_descr_root_path)
 
     def _xrdf_cmds_override(self):
         return []

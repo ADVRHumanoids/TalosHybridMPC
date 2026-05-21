@@ -22,6 +22,8 @@ constraints:
 costs:
   - z_left_sole_link
   - z_right_sole_link
+  - rot_left_sole_link
+  - rot_right_sole_link
   - base_lin_velxy
   - base_lin_velz
   - base_omega
@@ -29,6 +31,14 @@ costs:
   - joint_posture_capture
   - v_regularization
   - a_regularization
+  - f_left_lower_left_regularization
+  - f_left_upper_left_regularization
+  - f_left_lower_right_regularization
+  - f_left_upper_right_regularization
+  - f_right_lower_left_regularization
+  - f_right_upper_left_regularization
+  - f_right_lower_right_regularization
+  - f_right_upper_right_regularization
 
 .define:
   - &w_base_omega 15.
@@ -36,9 +46,11 @@ costs:
   - &w_base_vz 20.
   - &w_base_capture 200.
   - &w_contact_z 250.
+  - &w_sole_rot 100.
   - &w_postural 5.
   - &w_v 1e-2
   - &w_a 2e-1
+  - &w_f 6e-3
 
 base_lin_velxy:
   type: Cartesian
@@ -76,33 +88,39 @@ zero_velocity_left_sole_link:
   type: Cartesian
   base_link: "world"
   distal_link: left_sole_link
-  indices: [0, 1, 2]
+  indices: [0, 1, 2, 5]
   cartesian_type: velocity
 
 zero_velocity_right_sole_link:
   type: Cartesian
   base_link: "world"
   distal_link: right_sole_link
-  indices: [0, 1, 2]
+  indices: [0, 1, 2, 5]
   cartesian_type: velocity
 
 interaction_left_sole_link:
   type: VertexForce
   frame: left_sole_link
-  fn_min: 50.0
+  fn_min: 10.0
   enable_fc: true
   friction_coeff: 0.5
   vertex_frames:
-    - left_sole_link
+    - left_foot_lower_left
+    - left_foot_upper_left
+    - left_foot_lower_right
+    - left_foot_upper_right
 
 interaction_right_sole_link:
   type: VertexForce
   frame: right_sole_link
-  fn_min: 50.0
+  fn_min: 10.0
   enable_fc: true
   friction_coeff: 0.5
   vertex_frames:
-    - right_sole_link
+    - right_foot_lower_left
+    - right_foot_upper_left
+    - right_foot_lower_right
+    - right_foot_upper_right
 
 left_sole_link:
   type: Contact
@@ -129,6 +147,54 @@ a_regularization:
   nodes: ${range(0, N+1)}
   weight: *w_a
 
+f_left_lower_left_regularization:
+  type: Regularization
+  variable_name: f_left_foot_lower_left
+  nodes: all
+  weight: *w_f
+
+f_left_upper_left_regularization:
+  type: Regularization
+  variable_name: f_left_foot_upper_left
+  nodes: all
+  weight: *w_f
+
+f_left_lower_right_regularization:
+  type: Regularization
+  variable_name: f_left_foot_lower_right
+  nodes: all
+  weight: *w_f
+
+f_left_upper_right_regularization:
+  type: Regularization
+  variable_name: f_left_foot_upper_right
+  nodes: all
+  weight: *w_f
+
+f_right_lower_left_regularization:
+  type: Regularization
+  variable_name: f_right_foot_lower_left
+  nodes: all
+  weight: *w_f
+
+f_right_upper_left_regularization:
+  type: Regularization
+  variable_name: f_right_foot_upper_left
+  nodes: all
+  weight: *w_f
+
+f_right_lower_right_regularization:
+  type: Regularization
+  variable_name: f_right_foot_lower_right
+  nodes: all
+  weight: *w_f
+
+f_right_upper_right_regularization:
+  type: Regularization
+  variable_name: f_right_foot_upper_right
+  nodes: all
+  weight: *w_f
+
 z_left_sole_link:
   type: Cartesian
   distal_link: left_sole_link
@@ -142,3 +208,17 @@ z_right_sole_link:
   indices: [2]
   cartesian_type: position
   weight: *w_contact_z
+
+rot_left_sole_link:
+  type: Cartesian
+  distal_link: left_sole_link
+  indices: [3, 4, 5]
+  cartesian_type: position
+  weight: *w_sole_rot
+
+rot_right_sole_link:
+  type: Cartesian
+  distal_link: right_sole_link
+  indices: [3, 4, 5]
+  cartesian_type: position
+  weight: *w_sole_rot
