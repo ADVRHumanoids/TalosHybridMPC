@@ -3,7 +3,8 @@ solver:
   ipopt.linear_solver: ma57
   ipopt.tol: 0.1
   ipopt.constr_viol_tol: 0.01
-  ilqr.constraint_violation_threshold: 1e-2
+  ilqr.constraint_violation_threshold: 1e-4
+  ilqr.constr_decomp_type: cod
   ipopt.print_level: 5
   ipopt.suppress_all_output: 'yes'
   ipopt.sb: 'yes'
@@ -22,6 +23,9 @@ constraints:
 costs:
   - z_left_sole_link
   - z_right_sole_link
+  # Enable these only for precise foothold placement; otherwise keep landing x/y free.
+  # - xy_left_sole_link
+  # - xy_right_sole_link
   - rot_left_sole_link
   - rot_right_sole_link
   - base_lin_velxy
@@ -31,25 +35,29 @@ costs:
   - joint_posture_capture
   - v_regularization
   - a_regularization
-  - f_left_lower_left_regularization
-  - f_left_upper_left_regularization
-  - f_left_lower_right_regularization
-  - f_left_upper_right_regularization
-  - f_right_lower_left_regularization
-  - f_right_upper_left_regularization
-  - f_right_lower_right_regularization
-  - f_right_upper_right_regularization
+  # GaitManager adds phase-aware vertex-force regularization during stance.
+  # Keep these zero-force residuals disabled by default to avoid competing
+  # support-force targets.
+  # - f_left_lower_left_regularization
+  # - f_left_upper_left_regularization
+  # - f_left_lower_right_regularization
+  # - f_left_upper_right_regularization
+  # - f_right_lower_left_regularization
+  # - f_right_upper_left_regularization
+  # - f_right_lower_right_regularization
+  # - f_right_upper_right_regularization
 
 .define:
   - &w_base_omega 15.
   - &w_base_vxy 12.
   - &w_base_vz 20.
-  - &w_base_capture 200.
+  - &w_base_capture 1000.
   - &w_contact_z 250.
+  - &w_contact_xy 100.
   - &w_sole_rot 100.
-  - &w_postural 30.
-  - &w_v 1e-2
-  - &w_a 2e-1
+  - &w_postural 15.
+  - &w_v 2e-1
+  - &w_a 4e-1
   - &w_f 6e-3
 
 base_lin_velxy:
@@ -139,6 +147,7 @@ v_regularization:
   type: Regularization
   variable_name: v
   nodes: ${range(0, N+1)}
+  indices: joints_v
   weight: *w_v
 
 a_regularization:
@@ -208,6 +217,20 @@ z_right_sole_link:
   indices: [2]
   cartesian_type: position
   weight: *w_contact_z
+
+xy_left_sole_link:
+  type: Cartesian
+  distal_link: left_sole_link
+  indices: [0, 1]
+  cartesian_type: position
+  weight: *w_contact_xy
+
+xy_right_sole_link:
+  type: Cartesian
+  distal_link: right_sole_link
+  indices: [0, 1]
+  cartesian_type: position
+  weight: *w_contact_xy
 
 rot_left_sole_link:
   type: Cartesian
