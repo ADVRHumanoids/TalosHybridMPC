@@ -1,0 +1,19 @@
+<?xml version="1.0" ?>
+<mujoco>
+    <option cone="elliptic" impratio="2" timestep="0.001" noslip_iterations="0"/>
+
+    <default>
+        <geom condim="3" solref="0.005 1.2" solimp="0.995 0.995 0.001 0.5 2" friction="0.7 0.005 0.001"/>
+    </default>
+
+    <size njmax="1000" nconmax="200"/>
+
+    <sensor>
+        <accelerometer name="base_link_acc" site="base_link"/>
+        <gyro name="base_link_gyro" site="base_link"/>
+    </sensor>
+
+    <visual>
+        <quality shadowsize="2048"/>
+    </visual>
+</mujoco>

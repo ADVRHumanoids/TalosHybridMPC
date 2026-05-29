@@ -1,3 +1,62 @@
 XBotInterface:
   urdf_path: $PWD/talos.urdf
   srdf_path: $PWD/talos.srdf
+
+ModelInterface:
+  model_type: pin
+  is_model_floating_base: true
+
+motor_pd:
+  "leg_left_*_joint": [300, 60]
+  "leg_right_*_joint": [300, 60]
+  "torso_*_joint": [400, 60]
+  "arm_left_*_joint": [100, 25]
+  "arm_right_*_joint": [100, 25]
+  "head_*_joint": [20, 2]
+  "gripper_*": [20, 2]
+
+startup_motor_pd:
+  "leg_left_*_joint": [300, 60]
+  "leg_right_*_joint": [300, 60]
+  "torso_*_joint": [400, 60]
+  "arm_left_*_joint": [100, 25]
+  "arm_right_*_joint": [100, 25]
+  "head_*_joint": [20, 2]
+  "gripper_*": [20, 2]
+
+xbotcore_device_configs:
+    sim: $PWD/hal/talos_gz.yaml
+    dummy: $PWD/hal/talos_dummy.yaml
+
+xbotcore_threads:
+    rt_main:  {sched: fifo , prio: 60, period: 0.001}
+    nrt_main: {sched: other, prio: 0 , period: 0.005}
+
+xbotcore_plugins:
+
+    homing:
+        thread: rt_main
+        type: homing
+
+    ros_io: {thread: nrt_main, type: ros2_io}
+
+    zmq_io:
+        thread: nrt_main
+        type: zmq_io
+        params:
+          autostart: {type: bool, value: true}
+          protocol: {type: string, value: tcp}
+          tcp_state_port: {type: int, value: 5559}
+          tcp_cmd_port: {type: int, value: 5558}
+          tcp_service_port: {type: int, value: 5557}
+          ipc_state_path: {type: string, value: /tmp/xbot2_zmq_pub.ipc}
+          ipc_cmd_path: {type: string, value: /tmp/xbot2_zmq_cmd.ipc}
+          ipc_service_path: {type: string, value: /tmp/xbot2_zmq_rep.ipc}
+
+xbotcore_param:
+  /xbot/hal/joint_safety/delta_check_dt: 0.02
+  /xbot/hal/joint_safety/filter_autostart: {value: true, type: bool}
+  /xbot/hal/joint_safety/filter_safe_cutoff_hz: {value: 5.0, type: double}
+  /xbot/hal/joint_safety/filter_medium_cutoff_hz: {value: 15.0, type: double}
+  /xbot/hal/joint_safety/filter_fast_cutoff_hz: {value: 25.0, type: double}
+  /xbot/hal/enable_safety: {value: true, type: bool}
