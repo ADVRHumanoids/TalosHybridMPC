@@ -1,12 +1,40 @@
 <?xml version="1.0" ?>
 <mujoco>
-    <option cone="elliptic" impratio="2" timestep="0.001" noslip_iterations="0"/>
+    <option cone="elliptic" impratio="2" timestep="0.0005" noslip_iterations="0"/>
 
     <default>
         <geom condim="3" solref="0.005 1.2" solimp="0.995 0.995 0.001 0.5 2" friction="0.7 0.005 0.001"/>
     </default>
 
     <size njmax="1000" nconmax="200"/>
+
+    <contact>
+        <exclude name="base_torso_2_exclude" body1="base_link" body2="torso_2_link"/>
+        <exclude name="torso_2_head_2_exclude" body1="torso_2_link" body2="head_2_link"/>
+        <exclude name="torso_2_arm_left_2_exclude" body1="torso_2_link" body2="arm_left_2_link"/>
+        <exclude name="torso_2_arm_right_2_exclude" body1="torso_2_link" body2="arm_right_2_link"/>
+
+        <exclude name="arm_left_3_5_exclude" body1="arm_left_3_link" body2="arm_left_5_link"/>
+        <exclude name="arm_left_5_7_exclude" body1="arm_left_5_link" body2="arm_left_7_link"/>
+        <exclude name="arm_right_3_5_exclude" body1="arm_right_3_link" body2="arm_right_5_link"/>
+        <exclude name="arm_right_5_7_exclude" body1="arm_right_5_link" body2="arm_right_7_link"/>
+
+        <exclude name="base_leg_left_2_exclude" body1="base_link" body2="leg_left_2_link"/>
+        <exclude name="base_leg_left_3_exclude" body1="base_link" body2="leg_left_3_link"/>
+        <exclude name="base_leg_right_2_exclude" body1="base_link" body2="leg_right_2_link"/>
+        <exclude name="base_leg_right_3_exclude" body1="base_link" body2="leg_right_3_link"/>
+        <exclude name="leg_left_1_3_exclude" body1="leg_left_1_link" body2="leg_left_3_link"/>
+        <exclude name="leg_left_4_6_exclude" body1="leg_left_4_link" body2="leg_left_6_link"/>
+        <exclude name="leg_right_1_3_exclude" body1="leg_right_1_link" body2="leg_right_3_link"/>
+        <exclude name="leg_right_4_6_exclude" body1="leg_right_4_link" body2="leg_right_6_link"/>
+
+        <exclude name="leg_left_1_right_1_exclude" body1="leg_left_1_link" body2="leg_right_1_link"/>
+        <exclude name="leg_left_1_right_2_exclude" body1="leg_left_1_link" body2="leg_right_2_link"/>
+        <exclude name="leg_left_1_right_3_exclude" body1="leg_left_1_link" body2="leg_right_3_link"/>
+        <exclude name="leg_left_2_right_1_exclude" body1="leg_left_2_link" body2="leg_right_1_link"/>
+        <exclude name="leg_left_3_right_1_exclude" body1="leg_left_3_link" body2="leg_right_1_link"/>
+        <exclude name="leg_left_3_right_3_exclude" body1="leg_left_3_link" body2="leg_right_3_link"/>
+    </contact>
 
     <sensor>
         <accelerometer name="base_link_acc" site="base_link"/>

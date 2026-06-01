@@ -1,11 +1,13 @@
 #!/bin/bash
 
 usage() {
-  echo "Usage: $0 [--rt_factor <value>] [--ros-version <ros2|ros1>] [--urdf_path <path>] [--headless] [--pub-rostime]"
+  echo "Usage: $0 [--rt_factor <value>] [--ros-version <ros2|ros1>] [--urdf_path <path>] [--root_spawn_height <value>] [--init_steps <n>] [--headless] [--no_manual_stepping] [--pub-rostime] "
   exit 1
 }
 
 RT_FACTOR=1.0
+ROOT_SPAWN_HEIGHT="${XMJ_ROOT_SPAWN_HEIGHT:-0.9346}"
+INIT_STEPS="${XMJ_INIT_STEPS:-100}"
 XMJ_ROS_VERSION="${XMJ_ROS_VERSION:-ros2}"
 ROS1_DISTRO="${ROS1_DISTRO:-noetic}"
 ROS2_DISTRO="${ROS2_DISTRO:-jazzy}"
@@ -14,13 +16,16 @@ URDF_PATH="${XMJ_URDF_PATH:-${RUNTIME_DIR}/talos.urdf}"
 SRDF_PATH="${XMJ_SRDF_PATH:-${RUNTIME_DIR}/talos.srdf}"
 XBOT_CONFIG_PATH="${XMJ_XBOT_CONFIG_PATH:-${RUNTIME_DIR}/xbot2_basic.yaml}"
 HEADLESS=false
+NO_MANUAL_STEPPING=false
 PUB_ROSTIME=false
 TALOS_DESCRIPTION_ROOT="${TALOS_DESCRIPTION_ROOT:-${HOME}/ibrido_ws/src/talos-description/talos_description}"
 TALOS_DESCRIPTION_REPO="$(dirname "$TALOS_DESCRIPTION_ROOT")"
 WS_SRC_ROOT="$(dirname "$TALOS_DESCRIPTION_REPO")"
 TALOS_URDF_XACRO="${TALOS_URDF_XACRO:-${TALOS_DESCRIPTION_ROOT}/robots/talos_full_v2.urdf.xacro}"
-TALOS_SOURCE_SRDF_PATH="${TALOS_SOURCE_SRDF_PATH:-${TALOS_DESCRIPTION_ROOT}/srdf/talos.srdf}"
 TALOS_XMJ_DIR="${TALOS_XMJ_DIR:-${HOME}/ibrido_ws/src/TalosHybridMPC/taloshybridmpc/config/xmj_env_files}"
+TALOS_SOURCE_SRDF_PATH="${TALOS_SOURCE_SRDF_PATH:-${TALOS_XMJ_DIR}/talos.srdf}"
+XBOT_CONFIG_BUILDER="${IBRIDO_XBOT_CONFIG_BUILDER:-${HOME}/ibrido_utils/ibrido_xbot_config_builder.py}"
+TALOS_JNT_IMP_CONFIG_PATH="${TALOS_JNT_IMP_CONFIG_PATH:-${HOME}/ibrido_ws/src/TalosHybridMPC/taloshybridmpc/config/jnt_imp_config.yaml}"
 
 require_valid_xml() {
   local path="$1"
@@ -65,7 +70,7 @@ generate_talos_urdf() {
     use_sim:=true \
     enable_crane:=false \
     disable_gazebo_camera:=true \
-    use_capsule_collision:=false \
+    use_capsule_collision:=true \
     multiple:=false \
     gazebo_version:=classic \
     include_gazebo:=false \
@@ -92,11 +97,28 @@ cfg.write_text(text)
 ' "$XBOT_CONFIG_PATH" "$URDF_PATH" "$SRDF_PATH" "${RUNTIME_DIR}/hal/talos_gz.yaml" "${RUNTIME_DIR}/hal/talos_dummy.yaml"
 }
 
+apply_runtime_impedance_config() {
+  if [ ! -f "$XBOT_CONFIG_BUILDER" ]; then
+    echo "XBot config builder not found: $XBOT_CONFIG_BUILDER"
+    exit 2
+  fi
+  if [ ! -f "$TALOS_JNT_IMP_CONFIG_PATH" ]; then
+    echo "Joint impedance config not found: $TALOS_JNT_IMP_CONFIG_PATH"
+    exit 2
+  fi
+
+  XBOT_CONFIG_PATH="$(
+    python3 "$XBOT_CONFIG_BUILDER" \
+      --xbot-config "$XBOT_CONFIG_PATH" \
+      --impedance-config "$TALOS_JNT_IMP_CONFIG_PATH" \
+      --output-dir "${RUNTIME_DIR}/xbot_runtime"
+  )"
+}
+
 prepare_runtime_files() {
   mkdir -p "$RUNTIME_DIR"
   generate_talos_urdf "$URDF_PATH"
   require_valid_xml "$URDF_PATH" robot
-
   cp "$TALOS_SOURCE_SRDF_PATH" "$SRDF_PATH"
   require_valid_xml "$SRDF_PATH" robot
 
@@ -104,6 +126,7 @@ prepare_runtime_files() {
   rm -rf "$RUNTIME_DIR/hal"
   cp -r "$TALOS_XMJ_DIR/hal" "$RUNTIME_DIR/hal"
   patch_runtime_xbot_config
+  apply_runtime_impedance_config
 }
 
 while [[ $# -gt 0 ]]; do
@@ -111,7 +134,10 @@ while [[ $# -gt 0 ]]; do
     --rt_factor) RT_FACTOR="$2"; shift ;;
     --ros-version|--ros_version) XMJ_ROS_VERSION="$2"; shift ;;
     --urdf_path|--urdf-path) URDF_PATH="$2"; shift ;;
+    --root_spawn_height|--root-spawn-height) ROOT_SPAWN_HEIGHT="$2"; shift ;;
+    --init_steps|--init-steps) INIT_STEPS="$2"; shift ;;
     --headless) HEADLESS=true ;;
+    --no_manual_stepping|--no-manual-stepping) NO_MANUAL_STEPPING=true ;;
     --pub-rostime|--pub_rostime) PUB_ROSTIME=true ;;
     *) echo "Unknown arg: $1"; usage ;;
   esac
@@ -127,6 +153,9 @@ fi
 extra_args=()
 if [ "$HEADLESS" = true ]; then
   extra_args+=(--headless)
+fi
+if [ "$NO_MANUAL_STEPPING" = true ]; then
+  extra_args+=(--no_manual_stepping)
 fi
 if [ "$PUB_ROSTIME" = true ]; then
   case "$XMJ_ROS_VERSION" in
@@ -148,5 +177,7 @@ python "${HOME}/ibrido_ws/src/xbot2_mujoco/tests/PyXBotMjSim/launch_simulator.py
     --sites_path "${TALOS_XMJ_DIR}/sites.xml" \
     --xbot_config_path "$XBOT_CONFIG_PATH" \
     --blink_name base_link \
+    --root_spawn_height "$ROOT_SPAWN_HEIGHT" \
+    --init_steps "$INIT_STEPS" \
     --rt_factor "$RT_FACTOR" \
     "${extra_args[@]}"

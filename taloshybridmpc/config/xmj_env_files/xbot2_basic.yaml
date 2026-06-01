@@ -29,7 +29,7 @@ xbotcore_device_configs:
     dummy: $PWD/hal/talos_dummy.yaml
 
 xbotcore_threads:
-    rt_main:  {sched: fifo , prio: 60, period: 0.001}
+    rt_main:  {sched: fifo , prio: 60, period: 0.0005}
     nrt_main: {sched: other, prio: 0 , period: 0.005}
 
 xbotcore_plugins:
@@ -37,8 +37,6 @@ xbotcore_plugins:
     homing:
         thread: rt_main
         type: homing
-
-    ros_io: {thread: nrt_main, type: ros2_io}
 
     zmq_io:
         thread: nrt_main
@@ -54,9 +52,9 @@ xbotcore_plugins:
           ipc_service_path: {type: string, value: /tmp/xbot2_zmq_rep.ipc}
 
 xbotcore_param:
-  /xbot/hal/joint_safety/delta_check_dt: 0.02
+  /xbot/hal/joint_safety/delta_check_dt: 0.1
   /xbot/hal/joint_safety/filter_autostart: {value: true, type: bool}
   /xbot/hal/joint_safety/filter_safe_cutoff_hz: {value: 5.0, type: double}
   /xbot/hal/joint_safety/filter_medium_cutoff_hz: {value: 15.0, type: double}
   /xbot/hal/joint_safety/filter_fast_cutoff_hz: {value: 25.0, type: double}
-  /xbot/hal/enable_safety: {value: true, type: bool}
+  /xbot/hal/enable_safety: {value: false, type: bool}
