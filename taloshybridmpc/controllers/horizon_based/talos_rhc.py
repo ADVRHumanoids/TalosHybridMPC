@@ -80,7 +80,7 @@ class TalosRhc(HybridQuadRhc):
 
     def _init_problem(self):
 
-        fixed_jnts_patterns = []
+        fixed_jnts_patterns = ["head_1_joint", "head_2_joint"]
         if not self._custom_opts.get("add_upper_body", False):
             fixed_jnts_patterns += [
                 "arm_left",

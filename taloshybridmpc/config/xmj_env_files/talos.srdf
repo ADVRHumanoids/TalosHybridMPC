@@ -1,5 +1,8 @@
 <?xml version='1.0' encoding='utf-8'?>
 <robot name="talos">
+  <group name="imu_sensors">
+    <link name="base_link" />
+  </group>
   <group name="r_leg">
     <joint name="leg_right_1_joint" />
     <joint name="leg_right_2_joint" />

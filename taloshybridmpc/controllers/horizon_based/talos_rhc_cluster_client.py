@@ -70,5 +70,5 @@ class TalosRHCLusterClient(HybridQuadrupedClusterClient):
             refs_in_hor_frame=True,
             timeout_ms=self._timeout_ms,
             custom_opts=self._custom_opts)
-
+        
         return controller

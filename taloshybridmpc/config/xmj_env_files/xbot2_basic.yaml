@@ -1,28 +1,10 @@
 XBotInterface:
-  urdf_path: $PWD/talos.urdf
-  srdf_path: $PWD/talos.srdf
+  urdf_path: "**"
+  srdf_path: "**"
 
 ModelInterface:
   model_type: pin
   is_model_floating_base: true
-
-motor_pd:
-  "leg_left_*_joint": [300, 60]
-  "leg_right_*_joint": [300, 60]
-  "torso_*_joint": [400, 60]
-  "arm_left_*_joint": [100, 25]
-  "arm_right_*_joint": [100, 25]
-  "head_*_joint": [20, 2]
-  "gripper_*": [20, 2]
-
-startup_motor_pd:
-  "leg_left_*_joint": [300, 60]
-  "leg_right_*_joint": [300, 60]
-  "torso_*_joint": [400, 60]
-  "arm_left_*_joint": [100, 25]
-  "arm_right_*_joint": [100, 25]
-  "head_*_joint": [20, 2]
-  "gripper_*": [20, 2]
 
 xbotcore_device_configs:
     sim: $PWD/hal/talos_gz.yaml

@@ -4,8 +4,8 @@ motor_pd:
   "torso_*_joint": [400, 60]
   "arm_left_*_joint": [100, 25]
   "arm_right_*_joint": [100, 25]
-  "head_*_joint": [20, 2]
-  "gripper_*": [20, 2]
+  "head_*_joint": [10, 1]
+  "gripper_*": [10, 1]
 
 startup_motor_pd:
   "leg_left_*_joint": [300, 60]
@@ -13,5 +13,5 @@ startup_motor_pd:
   "torso_*_joint": [400, 60]
   "arm_left_*_joint": [100, 25]
   "arm_right_*_joint": [100, 25]
-  "head_*_joint": [20, 2]
-  "gripper_*": [20, 2]
+  "head_*_joint": [10, 1]
+  "gripper_*": [10, 1]
