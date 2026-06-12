@@ -4,6 +4,10 @@ import argparse
 from mpc_viz.MPCViz import MPCViz
 from mpc_viz.utils.sys_utils import PathsGetter
 
+from aug_mpc.utils.custom_arg_parsing import (
+    extract_custom_xacro_args,
+    generate_custom_arg_dict,
+)
 from taloshybridmpc.utils.talos_urdf_gen import TalosUrdfGen
 
 
@@ -48,16 +52,34 @@ if __name__ == "__main__":
         "--no_check_jnt_names",
         action="store_true",
         help="Skip MPCViz joint-name consistency checks.")
+    parser.add_argument(
+        "--custom_args_names",
+        nargs="+",
+        default=None,
+        help="Custom argument names from the active IBRIDO profile.")
+    parser.add_argument(
+        "--custom_args_vals",
+        nargs="+",
+        default=None,
+        help="Custom argument values from the active IBRIDO profile.")
+    parser.add_argument(
+        "--custom_args_dtype",
+        nargs="+",
+        default=None,
+        help="Custom argument dtypes from the active IBRIDO profile.")
 
     args = parser.parse_args()
 
     syspaths = PathsGetter()
+
+    custom_xacro_args = extract_custom_xacro_args(generate_custom_arg_dict(args))
 
     urdf_generator = TalosUrdfGen(
         descr_path=args.dpath,
         robotname=args.robotname,
         xacro_name=args.xacro_name,
         floating_joint=False,
+        custom_args_xacro=custom_xacro_args,
         name="talosUrdfMPCViz")
 
     mpc_viz = MPCViz(

@@ -28,12 +28,12 @@
         <exclude name="leg_right_1_3_exclude" body1="leg_right_1_link" body2="leg_right_3_link"/>
         <exclude name="leg_right_4_6_exclude" body1="leg_right_4_link" body2="leg_right_6_link"/>
 
-        <exclude name="leg_left_1_right_1_exclude" body1="leg_left_1_link" body2="leg_right_1_link"/>
+        <!-- <exclude name="leg_left_1_right_1_exclude" body1="leg_left_1_link" body2="leg_right_1_link"/>
         <exclude name="leg_left_1_right_2_exclude" body1="leg_left_1_link" body2="leg_right_2_link"/>
         <exclude name="leg_left_1_right_3_exclude" body1="leg_left_1_link" body2="leg_right_3_link"/>
         <exclude name="leg_left_2_right_1_exclude" body1="leg_left_2_link" body2="leg_right_1_link"/>
         <exclude name="leg_left_3_right_1_exclude" body1="leg_left_3_link" body2="leg_right_1_link"/>
-        <exclude name="leg_left_3_right_3_exclude" body1="leg_left_3_link" body2="leg_right_3_link"/>
+        <exclude name="leg_left_3_right_3_exclude" body1="leg_left_3_link" body2="leg_right_3_link"/> -->
     </contact>
 
     <sensor>
