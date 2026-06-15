@@ -52,8 +52,8 @@ costs:
   - &w_base_omega 12.
   - &w_base_vxy 12.
   - &w_base_vz 12.
-  - &w_base_capture 3000.
-  - &w_base_rot 50.
+  - &w_base_capture 1000.
+  - &w_base_rot 100.
   - &w_contact_z 300.
   - &w_contact_xy 100.
   - &w_sole_rot 100.
