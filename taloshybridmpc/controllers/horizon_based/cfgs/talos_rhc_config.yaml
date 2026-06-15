@@ -28,6 +28,7 @@ costs:
   # - xy_right_sole_link
   - rot_left_sole_link
   - rot_right_sole_link
+  - rot_base_link
   - base_lin_velxy
   - base_lin_velz
   - base_omega
@@ -51,7 +52,8 @@ costs:
   - &w_base_omega 12.
   - &w_base_vxy 12.
   - &w_base_vz 12.
-  - &w_base_capture 10000.
+  - &w_base_capture 3000.
+  - &w_base_rot 50.
   - &w_contact_z 300.
   - &w_contact_xy 100.
   - &w_sole_rot 100.
@@ -144,7 +146,7 @@ joint_posture_capture:
     21, 22, 23, 24, 25, 26, 27]
   weight: [10, 80, 5, 5, 10, 10,
     10, 80, 5, 5, 10, 10,
-    30, 30,
+    80, 30,
     30, 30, 30, 30, 30, 30, 30,
     30, 30, 30, 30, 30, 30, 30]
   nodes: ${range(N-8, N+1)}
@@ -205,19 +207,29 @@ xy_right_sole_link:
   cartesian_type: position
   weight: *w_contact_xy
 
+rot_base_link:
+  type: Cartesian
+  distal_link: base_link
+  indices: [3, 4]
+  cartesian_type: position
+  weight: *w_base_rot
+  nodes: ${range(1, N+1)}
+
 rot_left_sole_link:
   type: Cartesian
   distal_link: left_sole_link
-  indices: [3, 4, 5]
+  indices: [3, 4]
   cartesian_type: position
   weight: *w_sole_rot
+  nodes: ${range(1, N+1)}
 
 rot_right_sole_link:
   type: Cartesian
   distal_link: right_sole_link
-  indices: [3, 4, 5]
+  indices: [3, 4]
   cartesian_type: position
   weight: *w_sole_rot
+  nodes: ${range(1, N+1)}
 
 # f_left_lower_left_regularization:
 #   type: Regularization
