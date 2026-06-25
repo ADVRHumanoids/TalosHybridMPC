@@ -1,17 +1,66 @@
+# motor_pd:
+#   "leg_left_*_joint": [300, 30]
+#   "leg_right_*_joint": [300, 30]
+#   "torso_*_joint": [300, 30]
+#   "arm_left_*_joint": [100, 10]
+#   "arm_right_*_joint": [100, 10]
+#   "head_*_joint": [10, 1]
+#   "gripper_*": [10, 1]
+
+# startup_motor_pd:
+#   "leg_left_*_joint": [300, 30]
+#   "leg_right_*_joint": [300, 30]
+#   "torso_*_joint": [300, 30]
+#   "arm_left_*_joint": [100, 10]
+#   "arm_right_*_joint": [100, 10]
+#   "head_*_joint": [10, 1]
+#   "gripper_*": [10, 1]
+
+# Alternative gains 
 motor_pd:
-  "leg_left_*_joint": [300, 30]
-  "leg_right_*_joint": [300, 30]
-  "torso_*_joint": [300, 30]
-  "arm_left_*_joint": [100, 10]
-  "arm_right_*_joint": [100, 10]
-  "head_*_joint": [10, 1]
-  "gripper_*": [10, 1]
+  "arm_*_1_joint": [220.0, 20.0]
+  "arm_*_2_joint": [180.0, 18.0]
+  "arm_*_3_joint": [160.0, 16.0]
+  "arm_*_4_joint": [140.0, 14.0]
+  "arm_*_5_joint": [60.0, 6.0]
+  "arm_*_6_joint": [45.0, 4.5]
+  "arm_*_7_joint": [45.0, 4.5]
+
+  "leg_*_1_joint": [1400.0, 40.0]
+  "leg_*_2_joint": [1400.0, 45.0]
+  "leg_*_3_joint": [1400.0, 60.0]
+  "leg_*_4_joint": [1400.0, 70.0]
+  "leg_*_5_joint": [1400.0, 35.0]
+  "leg_*_6_joint": [800.0, 22.0]
+
+  "torso_1_joint": [350.0, 20.0]
+  "torso_2_joint": [500.0, 25.0]
+
+  "head_1_joint": [30.0, 3.0]
+  "head_2_joint": [20.0, 2.0]
+
+  "gripper_*_joint": [15.0, 1.5]
 
 startup_motor_pd:
-  "leg_left_*_joint": [300, 30]
-  "leg_right_*_joint": [300, 30]
-  "torso_*_joint": [300, 30]
-  "arm_left_*_joint": [100, 10]
-  "arm_right_*_joint": [100, 10]
-  "head_*_joint": [10, 1]
-  "gripper_*": [10, 1]
+  "arm_*_1_joint": [220.0, 20.0]
+  "arm_*_2_joint": [180.0, 18.0]
+  "arm_*_3_joint": [160.0, 16.0]
+  "arm_*_4_joint": [140.0, 14.0]
+  "arm_*_5_joint": [60.0, 6.0]
+  "arm_*_6_joint": [45.0, 4.5]
+  "arm_*_7_joint": [45.0, 4.5]
+
+  "leg_*_1_joint": [300.0, 40.0]
+  "leg_*_2_joint": [300.0, 45.0]
+  "leg_*_3_joint": [300.0, 60.0]
+  "leg_*_4_joint": [300.0, 70.0]
+  "leg_*_5_joint": [300.0, 35.0]
+  "leg_*_6_joint": [150.0, 22.0]
+
+  "torso_1_joint": [350.0, 20.0]
+  "torso_2_joint": [500.0, 25.0]
+
+  "head_1_joint": [30.0, 3.0]
+  "head_2_joint": [20.0, 2.0]
+
+  "gripper_*_joint": [15.0, 1.5]
