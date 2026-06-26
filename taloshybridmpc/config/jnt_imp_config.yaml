@@ -50,15 +50,15 @@ startup_motor_pd:
   "arm_*_6_joint": [45.0, 4.5]
   "arm_*_7_joint": [45.0, 4.5]
 
-  "leg_*_1_joint": [300.0, 40.0]
-  "leg_*_2_joint": [300.0, 45.0]
-  "leg_*_3_joint": [300.0, 60.0]
-  "leg_*_4_joint": [300.0, 70.0]
-  "leg_*_5_joint": [300.0, 35.0]
-  "leg_*_6_joint": [150.0, 22.0]
+  "leg_*_1_joint": [150.0, 15.0]
+  "leg_*_2_joint": [150.0, 15.0]
+  "leg_*_3_joint": [150.0, 15.0]
+  "leg_*_4_joint": [150.0, 15.0]
+  "leg_*_5_joint": [150.0, 15.0]
+  "leg_*_6_joint": [150.0, 15.0]
 
-  "torso_1_joint": [350.0, 20.0]
-  "torso_2_joint": [500.0, 25.0]
+  "torso_1_joint": [150.0, 15.0]
+  "torso_2_joint": [150.0, 15.0]
 
   "head_1_joint": [30.0, 3.0]
   "head_2_joint": [20.0, 2.0]
