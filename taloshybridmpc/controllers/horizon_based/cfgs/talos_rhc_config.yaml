@@ -23,9 +23,14 @@ constraints:
 costs:
   - z_left_sole_link
   - z_right_sole_link
+  # Velocity-mode swing tasks: use these instead of z_*/xy_*.
+  # - vz_left_sole_link
+  # - vz_right_sole_link
   # Enable these only for precise foothold placement; otherwise keep landing x/y free.
-  # - xy_left_sole_link
-  # - xy_right_sole_link
+  - xy_left_sole_link
+  - xy_right_sole_link
+  # - vxy_left_sole_link
+  # - vxy_right_sole_link
   - rot_left_sole_link
   - rot_right_sole_link
   - rot_base_link
@@ -55,7 +60,9 @@ costs:
   - &w_base_capture 100
   - &w_base_rot 100.
   - &w_contact_z 500.
+  - &w_contact_vz 500.
   - &w_contact_xy 100.
+  - &w_contact_vxy 100.
   - &w_sole_rot 30.
   # - &w_f 6e-3
 
@@ -193,6 +200,20 @@ z_right_sole_link:
   cartesian_type: position
   weight: *w_contact_z
 
+vz_left_sole_link:
+  type: Cartesian
+  distal_link: left_sole_link
+  indices: [2]
+  cartesian_type: velocity
+  weight: *w_contact_vz
+
+vz_right_sole_link:
+  type: Cartesian
+  distal_link: right_sole_link
+  indices: [2]
+  cartesian_type: velocity
+  weight: *w_contact_vz
+
 xy_left_sole_link:
   type: Cartesian
   distal_link: left_sole_link
@@ -206,6 +227,20 @@ xy_right_sole_link:
   indices: [0, 1]
   cartesian_type: position
   weight: *w_contact_xy
+
+vxy_left_sole_link:
+  type: Cartesian
+  distal_link: left_sole_link
+  indices: [0, 1]
+  cartesian_type: velocity
+  weight: *w_contact_vxy
+
+vxy_right_sole_link:
+  type: Cartesian
+  distal_link: right_sole_link
+  indices: [0, 1]
+  cartesian_type: velocity
+  weight: *w_contact_vxy
 
 rot_base_link:
   type: FrameAxis
