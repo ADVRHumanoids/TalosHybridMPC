@@ -70,7 +70,7 @@ generate_talos_urdf() {
     use_sim:=true \
     enable_crane:=false \
     disable_gazebo_camera:=true \
-    use_capsule_collision:=true \
+    use_capsule_collision:=false \
     multiple:=false \
     gazebo_version:=classic \
     include_gazebo:=false \
